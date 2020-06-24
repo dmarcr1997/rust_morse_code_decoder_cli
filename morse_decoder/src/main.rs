@@ -1,5 +1,5 @@
 use std::collections::HashMap;
-
+use std::io;
 struct MorseDecoder {
     morse_code: HashMap<String, String>
 }
@@ -10,7 +10,6 @@ impl MorseDecoder {
         for c in message.chars(){
             refined.push(c.to_string());
         }
-        println!("{:?}", refined);
         let mut decoded_string: Vec<String> = vec![];
         for code in refined{
             if code == " "{
@@ -61,7 +60,7 @@ impl MorseDecoder {
     
 }
 
-fn main() {
+fn code_translator(choice: String) -> String{
     let morse_key = vec![
        ".-".to_string(), 
        "-...".to_string(), 
@@ -123,11 +122,52 @@ fn main() {
     let decoder = MorseDecoder {
         morse_code: morse_key.into_iter().zip(letters.into_iter()).collect()
     };
-     
-    println!("{}", decoder.decode_morse("-.. .- -- --- -."));
-    println!("{}", decoder.convert_to_morse("DAMON"));
-    println!("{}", decoder.decode_morse(&decoder.convert_to_morse("DONT RUN AWAY AGAIN")));
-    println!("{}", decoder.decode_morse(".... . .-.. .-.. ---  .-- --- .-. .-.. -.."));
+    
+    if choice.to_uppercase() == String::from("ENCODE"){
+        let mut message = String::new();
+        println!("Enter Message:");
+        io::stdin()
+            .read_line(&mut message)
+            .expect("Failed to read line");
+        println!("__________________________________________________________________________________");
+        return decoder.convert_to_morse(&message.trim())
+    }
+    else if choice.to_uppercase() == String::from("DECODE"){
+        let mut message = String::new();
+        println!("Enter Message");
+        io::stdin()
+            .read_line(&mut message)
+            .expect("Failed to read line");
+        println!("__________________________________________________________________________________");
+        return decoder.decode_morse(&message.trim())
+    }
+    else{
+        return String::from("Invalid Entry")
+    }
+}
+
+fn main() {
+    
+    println!("Hello Welcome to No Re Morse, Just kidding this is a Morse Code translator/decoder");
+    println!("----------------------------------------------------------------------------------");
+    println!("Please enter morse code with ONE space between letters and TWO space between words");
+    println!("Please enter words with ONE space between them and in all capital letters");
+    println!("----------------------------------------------------------------------------------");
+    println!("Enter decode to translate from morse code or encode to translate to morse code:   ");
+    println!("----------------------------------------------------------------------------------");
+    let mut code_choice = String::new();
+    io::stdin()
+        .read_line(&mut code_choice)
+        .expect("Failed to read line");
+    let code_choice = code_choice.trim().to_string();
+    println!("{}",code_translator(code_choice));
+    
+    
+    
+    // println!("{}", decoder.decode_morse("-.. .- -- --- -."));
+    // println!("{}", decoder.convert_to_morse("DAMON"));
+    // println!("{}", decoder.decode_morse(&decoder.convert_to_morse("HELLO WORLD")));
+    // println!("{}", decoder.decode_morse(".... . .-.. .-.. ---  .-- --- .-. .-.. -.."));
 }
 
 
