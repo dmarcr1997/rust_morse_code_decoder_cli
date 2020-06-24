@@ -5,12 +5,36 @@ struct MorseDecoder {
 }
 
 impl MorseDecoder {
+    fn convert_to_morse(&self, message: &str) -> String{
+        let mut refined: Vec<String> = vec![];
+        for c in message.chars(){
+            refined.push(c.to_string());
+        }
+        println!("{:?}", refined);
+        let mut decoded_string: Vec<String> = vec![];
+        for code in refined{
+            if code == " "{
+                decoded_string.push("  ".to_string());
+            }
+            else{
+                for (k, v) in self.morse_code.iter(){
+                    if v.to_string() == code{
+                        decoded_string.push(k.to_string());
+                        decoded_string.push(" ".to_string());
+                        break;
+                    }
+                }
+            }
+         
+        }
+        return decoded_string.join("").trim().to_string()
+    }
+
     fn decode_morse(&self, encoded: &str) -> String {
         let refined: Vec<String> = encoded
                 .split(" ")
                 .map(|s| s.parse().expect("parse error"))
                 .collect();
-        println!("{:?}", refined);
         let mut decoded_string: Vec<String> = vec![];
         let mut space_count = 0;
         for code in refined{
@@ -101,6 +125,9 @@ fn main() {
     };
      
     println!("{}", decoder.decode_morse("-.. .- -- --- -."));
+    println!("{}", decoder.convert_to_morse("DAMON"));
+    println!("{}", decoder.decode_morse(&decoder.convert_to_morse("DONT RUN AWAY AGAIN")));
+    println!("{}", decoder.decode_morse(".... . .-.. .-.. ---  .-- --- .-. .-.. -.."));
 }
 
 
